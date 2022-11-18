@@ -27,4 +27,4 @@ Explorar as funcionalidade do React com TypeScript e consumo de API de CEP
     "web-vitals": "^2.1.0"
 
 ### Projeto publicado na Vercel
-Link em breve
+Disponível em [https://estudos-form1.vercel.app](https://estudos-form1.vercel.app)
