@@ -1,9 +1,10 @@
+import MyForm from "./Components/MyForm";
 
 
 function App() {
   return (
     <div className="App">
-      meu app aqui
+      <MyForm />
     </div>
   );
 }
