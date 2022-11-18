@@ -4,7 +4,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 //import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -27,36 +26,48 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function MyForm() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-    });
-  };
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        console.log({
+        name: data.get('name'),
+        });
+    };
 
-  //setEndereco retorna o que está definido na função manipularEndereco
-  const [endereco, setEndereco] = useState({})
+    interface enderecoTipo {
+        cep: string,
+        logradouro: string,
+        bairro: string,
+        cidade: string,
+        estado: string
+    }
 
-  //Função chamada no evento onChange
-  function manipularEndereco (evento: React.ChangeEvent<HTMLInputElement>) {
-    //console.log(evento.target.value)
-
-    const cep = evento.target.value
-
-    //console.log(cep)
-    setEndereco ({
-      cep
+    //setEndereco retorna o que está definido na função manipularEndereco
+    const [endereco, setEndereco] = useState<enderecoTipo>({
+        cep: '',
+        logradouro: '',
+        bairro: '',
+        cidade: '',
+        estado: ''
     })
 
-    if (cep && cep.length === 8) {
-        fetch(`https://viacep.com.br/ws/${cep}/json`)
+    //Função chamada no evento onChange
+    function manipularEndereco (evento: React.ChangeEvent<HTMLInputElement>) {
+
+    const cepAtual = evento.target.value
+    
+    setEndereco ({cep: cepAtual, logradouro: '', bairro: '', cidade: '', estado: ''})
+    console.log(endereco)
+
+    if (cepAtual && cepAtual.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cepAtual}/json`)
         .then(resposta => resposta.json())
         .then(dados => {
             setEndereco(enderecoAntigo => {
                 //console.log(dados)
                 return {
                     ...enderecoAntigo, //React mantem na memória o endereço antigo
+                    logradouro: dados.logradouro,
                     bairro: dados.bairro,
                     cidade: dados.localidade,
                     estado: dados.uf
@@ -64,7 +75,6 @@ export default function MyForm() {
             })
         })
     }
-    //console.log(endereco)
   }
 
   return (
@@ -80,7 +90,6 @@ export default function MyForm() {
           }}
         >
           <Header />
-          <p><em>Testar variável: endereco.cep</em></p>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
@@ -108,6 +117,7 @@ export default function MyForm() {
               id="logradouro"
               label="Rua"
               name="logradouro"
+              value={endereco.logradouro}
               autoFocus
             />
             <TextField
@@ -117,6 +127,7 @@ export default function MyForm() {
               id="bairro"
               label="Bairro"
               name="bairro"
+              value={endereco.bairro}
               autoFocus
             />
             <TextField
@@ -126,6 +137,7 @@ export default function MyForm() {
               id="localidade"
               label="Cidade"
               name="localidade"
+              value={endereco.cidade}
               autoFocus
             />
             <TextField
@@ -135,6 +147,7 @@ export default function MyForm() {
               id="uf"
               label="Estado"
               name="uf"
+              value={endereco.estado}
               autoFocus
             />
             <FormControlLabel
